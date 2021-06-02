@@ -19,3 +19,26 @@ var pool = sync.Pool{
 		return new(storeItem)
 	},
 }
+
+// New Lockey.
+//
+// Creates a new Lockey.
+func New() *Lockey {
+	return &Lockey{
+		grandMu: sync.Mutex{},
+		store:   make(map[string]*storeItem),
+	}
+}
+
+func (i *storeItem) lock() {
+	i.mu.Lock()
+}
+
+func (i *storeItem) unlock() {
+	i.mu.Unlock()
+}
+
+// Is there any reservation?
+func (i *storeItem) isReserved() bool {
+	return i.reserve > 0
+}
